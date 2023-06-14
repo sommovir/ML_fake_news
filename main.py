@@ -4,7 +4,7 @@ import string
 import numpy
 
 dataframe = pd.read_csv('news.csv')
-print(dataframe.head())
+print(dataframe.head()) #dataframe
 
 x = dataframe['text']
 y = dataframe['label']
