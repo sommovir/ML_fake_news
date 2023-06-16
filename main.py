@@ -5,6 +5,7 @@ import numpy
 
 dataframe = pd.read_csv('news.csv')
 print(dataframe.head()) #dataframe
+#prova sms delivery
 
 x = dataframe['text']
 y = dataframe['label']
