@@ -9,6 +9,10 @@ numpy = "*"
 pandas = "*"
 scikit-learn = "*"
 seaborn = "*"
+nltk = "*"
+transformers = "*"
+matplotlib = "*"
+wordcloud = "*"
 
 [dev-packages]
 
