@@ -14,7 +14,7 @@ stop_words = stopwords.words('english')
 dataset = pd.read_csv("../DATA/train.csv")
 # _vecchio_dataset = pd.read_csv("../_vecchio_tutorial/news.csv")
 
-print("Dataset info and stats")
+print("\nDataset info and stats")
 print("------------")
 
 print("Shape:", dataset.shape)
@@ -60,6 +60,8 @@ dataset.fillna(" ", inplace= True)
 # dataset['content'] = dataset['title'] + " " + dataset['author'] + " " + dataset['text']
 dataset['content'] = dataset['title'] + " " + " " + dataset['text']
 
+print("Data cleaning...")
+
 port_stem = PorterStemmer()
 
 def preprocessing(content):
@@ -82,54 +84,73 @@ def preprocessing(content):
     stemmed_content = " ".join(stemmed_content)
     return stemmed_content
 
-dataset['content'] = dataset.title.apply(preprocessing)
+dataset['content'] = dataset.content.apply(preprocessing)
 
-# Exlorative analysis
+# Explorative analysis
 
-wordcloud = WordCloud(background_color='black', width=1200, height=800)
+wordcloud = WordCloud(background_color='white', width=1200, height=800)
+
+print("Plotting General content word cloud...")
 
 content_set = " ".join(dataset['content'])
 cloud = wordcloud.generate(content_set)
 plt.figure(figsize=(20,30))
 plt.imshow(cloud)
 plt.axis('off')
-plt.savefig('img/content_word_cloud.png', bbox_inches='tight')
+plt.savefig('img/general_content_word_cloud.png', bbox_inches='tight')
+plt.clf()
 
 # Show only the reliable set
+print("Plotting content word cloud for reliable set...")
+
 reliable_set = " ".join(dataset[dataset['label']==0]['content'])
 reliable_cloud = wordcloud.generate(reliable_set)
 plt.figure(figsize=(20,30))
 plt.imshow(reliable_cloud)
 plt.axis('off')
 plt.savefig('img/content_word_cloud_reliable.png', bbox_inches='tight')
+plt.clf()
 
 # Show only the unreliable set
+print("Plotting content word cloud for unreliable set...")
+
 unreliable_set = " ".join(dataset[dataset['label']==1]['content'])
 unreliable_cloud = wordcloud.generate(unreliable_set)
 plt.figure(figsize=(20,30))
 plt.imshow(unreliable_cloud)
 plt.axis('off')
 plt.savefig('img/content_word_cloud_unreliable.png', bbox_inches='tight')
+plt.clf()
 
 # N-grams analysis
 
 def plot_ngrams(text, title, out, ylabel, xlabel="Occurences", n=2, top=20):
     count = (pd.Series(nltk.ngrams(text.split(), n)).value_counts())[:top] #get the top n ngrams
-    count.sort_values().plot.barh(color='blue', width=.9, figsize=(20,30))
-    plt.title(title)
-    plt.ylabel(ylabel)
-    plt.xlabel(xlabel)
+    count.sort_values().plot.barh(
+        color='blue', 
+        width=.9, 
+        figsize=(12,8),
+        xlabel=xlabel,
+        ylabel=ylabel,
+        title=title
+    )
     plt.savefig(out, bbox_inches='tight')
     #plt.show()
+    plt.clf()
     
 # Plot bigrams for the reliable set
+print("Plotting bigrams for reliable set...")
 plot_ngrams(reliable_set, "Top 20 reliable news bigrams", 'img/reliable_bigrams.png', 'Bigram', n=2)
 
 # Plot bigrams for the unreliable set
+print("Plotting bigrams for ureliable set...")
 plot_ngrams(unreliable_set, "Top 20 unreliable news bigrams", 'img/unreliable_bigrams.png', 'Bigram', n=2)
 
 # Plot trigrams for the reliable set
+print("Plotting trigrams for reliable set...")
 plot_ngrams(reliable_set, "Top 20 reliable news trigrams", 'img/reliable_trigrams.png', 'Trigram', n=3)
 
 # Plot trigrams for the unreliable set
+print("Plotting trigrams for unreliable set...")
 plot_ngrams(unreliable_set, "Top 20 unreliable news trigrams", 'img/unreliable_trigrams.png', 'Trigram', n=3)
+
