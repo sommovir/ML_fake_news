@@ -46,7 +46,7 @@ kaggle competitions download -c fake-news
 ```
 
 Oppure scaricare dalla pagina della competizione direttamente nella cartella `DATA/`.
-La cartella è inserita nel `.gitignore` per evitare che il dataaet vada a intasare il repository.
+La cartella è inserita nel `.gitignore` per evitare che il dataset vada a intasare il repository.
 
 ## 1 Data Preparation
 
@@ -56,3 +56,9 @@ Svolgiamo anche alcune funzioni di Exlorative Data Analysis, in particolar modo:
 
 - **Univariate Analysis**: useremo un grafico Word LCoud per mostrare la frequesnza di certe parole all'interno del testo da classificare
 - **Bivariate Analysis**: faremo un'analisi dei bigrammi più frequenti
+
+## 2 Baseline
+
+In questa sezione stabiliamo la baseline, usualmenteun linear o logistic regression model.
+Eseguiamo tutti i benchmark soliti per i modelli, così abbiamo dati per inferire la validità di modelli susseguenti a partire dal modello prescelto
+
