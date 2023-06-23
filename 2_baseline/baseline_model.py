@@ -4,9 +4,6 @@ import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, ConfusionMatrixDisplay, classification_report, roc_curve, roc_auc_score
 
@@ -32,6 +29,8 @@ X_train, X_test, y_train, y_test = train_test_split(tfidf, targets, test_size=0.
 # Statistiche sul train/test split
 print(f"The shape of X_train is: {X_train.shape[0]}")
 print(f"The shape of X_test is: {X_test.shape[0]}")
+
+# ######### HELPER FUNCTIONS ##########
 
 # train() esegue il training del modello
 def train(model , model_name):

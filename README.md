@@ -22,7 +22,7 @@ Comando di chiusura:
 exit # o CTRL+D o quit, a seconda della shell
 ```
 
-COmando per installare un pacchetto python nell'environment:
+Comando per installare un pacchetto python nell'environment:
 
 ```shell
 pipenv install <package-name>
@@ -62,3 +62,9 @@ Svolgiamo anche alcune funzioni di Exlorative Data Analysis, in particolar modo:
 In questa sezione stabiliamo la baseline, usualmenteun linear o logistic regression model.
 Eseguiamo tutti i benchmark soliti per i modelli, così abbiamo dati per inferire la validità di modelli susseguenti a partire dal modello prescelto
 
+
+## 3 Algorithm_A
+
+Qui valutiamo vari algoritmi classici per stabilire quale sia uno buono che possa competere nella sezione classici
+
+Diamo la possibilità all'utente di scegliere quale eseguire perchè prende tempo e qualcuno potrebbe fallire per mancanza di risorse

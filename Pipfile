@@ -15,6 +15,7 @@ matplotlib = "*"
 wordcloud = "*"
 mlxtend = "*"
 spacy = "*"
+inquirer = "*"
 
 [dev-packages]
 
