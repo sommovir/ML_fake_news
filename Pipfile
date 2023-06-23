@@ -13,6 +13,8 @@ nltk = "*"
 transformers = "*"
 matplotlib = "*"
 wordcloud = "*"
+mlxtend = "*"
+spacy = "*"
 
 [dev-packages]
 

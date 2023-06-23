@@ -1,9 +1,6 @@
 import re
 import nltk
 import pandas as pd
-import seaborn as sns
-from wordcloud import WordCloud, STOPWORDS
-import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
  
@@ -12,17 +9,21 @@ stop_words = stopwords.words('english')
 
 # Load the dataset
 dataset = pd.read_csv("../DATA/train.csv")
-# _vecchio_dataset = pd.read_csv("../_vecchio_tutorial/news.csv")
 
 print("\nDataset info and stats")
 print("------------")
 
 print("Shape:", dataset.shape)
-# print("vecchio dataset", _vecchio_dataset.shape)
 
 # colonne
 print("Columns names: ", dataset.columns)
 # ['id', 'title', 'author', 'text', 'label']
+
+# 'label' contiene le classi: 0 non-fake, 1 fake
+print("\nLabels distribution:")
+print(dataset.label.value_counts())
+print("1: means fake news (unreliable)")
+print("0: means non-fake news (reliable)")
 
 # 'text' contiene gli articoli
 print("\nStatistiche sulla lunghezza degli articoli:")
@@ -34,22 +35,6 @@ print("\nStatistiche sulla lunghezza dei titoli:")
 title_len = dataset.title.str.split().str.len()
 print(title_len.describe())
 
-# Distibuzione della classificazione
-print("\nLabels distribution:")
-print(dataset.label.value_counts())
-print("1: means fake news (unreliable)")
-print("0: means non-fake news (reliable)")
-
-label_count_plot = sns.countplot(
-    x= "label", 
-    data=dataset,
-    width=0.4
-)
-fig = label_count_plot.get_figure()
-fig.legend(title='Classes', loc='upper right', labels=['reliable', 'unreliable'])
-fig.savefig("img/label_count_plot.png") 
-
-
 # Pulizia dei dati
 
 # null data
@@ -60,12 +45,12 @@ dataset.fillna(" ", inplace= True)
 # dataset['content'] = dataset['title'] + " " + dataset['author'] + " " + dataset['text']
 dataset['content'] = dataset['title'] + " " + " " + dataset['text']
 
-print("Data cleaning...")
+print("\nData cleaning...")
 
 port_stem = PorterStemmer()
 
 def preprocessing(content):
-    content = re.sub('https?[\w:/\.]+',' ', content) # remove url
+    content = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',' ', content) # remove url
     content = re.sub('[^\.\w\s]',' ', content)       # remove all that is not a character or punctuation
     content = re.sub('[^a-zA-Z]',' ', content)       # replace all non-alphabetic with a space
     content = re.sub('\s\s+',' ', content)           # replace more than one space with a single space
@@ -86,71 +71,6 @@ def preprocessing(content):
 
 dataset['content'] = dataset.content.apply(preprocessing)
 
-# Explorative analysis
-
-wordcloud = WordCloud(background_color='white', width=1200, height=800)
-
-print("Plotting General content word cloud...")
-
-content_set = " ".join(dataset['content'])
-cloud = wordcloud.generate(content_set)
-plt.figure(figsize=(20,30))
-plt.imshow(cloud)
-plt.axis('off')
-plt.savefig('img/general_content_word_cloud.png', bbox_inches='tight')
-plt.clf()
-
-# Show only the reliable set
-print("Plotting content word cloud for reliable set...")
-
-reliable_set = " ".join(dataset[dataset['label']==0]['content'])
-reliable_cloud = wordcloud.generate(reliable_set)
-plt.figure(figsize=(20,30))
-plt.imshow(reliable_cloud)
-plt.axis('off')
-plt.savefig('img/content_word_cloud_reliable.png', bbox_inches='tight')
-plt.clf()
-
-# Show only the unreliable set
-print("Plotting content word cloud for unreliable set...")
-
-unreliable_set = " ".join(dataset[dataset['label']==1]['content'])
-unreliable_cloud = wordcloud.generate(unreliable_set)
-plt.figure(figsize=(20,30))
-plt.imshow(unreliable_cloud)
-plt.axis('off')
-plt.savefig('img/content_word_cloud_unreliable.png', bbox_inches='tight')
-plt.clf()
-
-# N-grams analysis
-
-def plot_ngrams(text, title, out, ylabel, xlabel="Occurences", n=2, top=20):
-    count = (pd.Series(nltk.ngrams(text.split(), n)).value_counts())[:top] #get the top n ngrams
-    count.sort_values().plot.barh(
-        color='blue', 
-        width=.9, 
-        figsize=(12,8),
-        xlabel=xlabel,
-        ylabel=ylabel,
-        title=title
-    )
-    plt.savefig(out, bbox_inches='tight')
-    #plt.show()
-    plt.clf()
-    
-# Plot bigrams for the reliable set
-print("Plotting bigrams for reliable set...")
-plot_ngrams(reliable_set, "Top 20 reliable news bigrams", 'img/reliable_bigrams.png', 'Bigram', n=2)
-
-# Plot bigrams for the unreliable set
-print("Plotting bigrams for ureliable set...")
-plot_ngrams(unreliable_set, "Top 20 unreliable news bigrams", 'img/unreliable_bigrams.png', 'Bigram', n=2)
-
-# Plot trigrams for the reliable set
-print("Plotting trigrams for reliable set...")
-plot_ngrams(reliable_set, "Top 20 reliable news trigrams", 'img/reliable_trigrams.png', 'Trigram', n=3)
-
-# Plot trigrams for the unreliable set
-print("Plotting trigrams for unreliable set...")
-plot_ngrams(unreliable_set, "Top 20 unreliable news trigrams", 'img/unreliable_trigrams.png', 'Trigram', n=3)
+# Save processed dataset
+dataset.to_pickle("../DATA/processed_training.pkl.zip")
 
