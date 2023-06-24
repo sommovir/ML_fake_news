@@ -68,3 +68,7 @@ Eseguiamo tutti i benchmark soliti per i modelli, così abbiamo dati per inferir
 Qui valutiamo vari algoritmi classici per stabilire quale sia uno buono che possa competere nella sezione classici
 
 Diamo la possibilità all'utente di scegliere quale eseguire perchè prende tempo e qualcuno potrebbe fallire per mancanza di risorse
+
+## 4 Algorith_B
+
+Qui usiamo un algoritmo con trasformers, BERT (o DistilBERT, a piacere). Usiamo un fine-tuning sugli articoli ed in seguito la classificazione
