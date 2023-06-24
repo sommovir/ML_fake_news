@@ -193,7 +193,7 @@ print(f"Tempo impiegato per l'esecuzione: {ore} ore, {minuti} minuti, {secondi} 
 '''
 Sulla mia macchina hanno impiegato:
 
-* DistilBERT sui soli titoli:    ore, minuti, secondi
+* DistilBERT sui soli titoli:    7 ore, 24 minuti, 22 secondi
 * DistilBERT su titoli e corpo:  
 * BERT sui soli titoli:          
 * BERT su titoli e corpo:        

@@ -2,3 +2,4 @@
 *.zip
 *.csv
 bert_results/
+MODELS/
