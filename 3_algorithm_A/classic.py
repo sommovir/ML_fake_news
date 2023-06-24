@@ -158,7 +158,7 @@ def svm():
     svm_model_file = f'{models_path}/svm_model.sav'
     joblib.dump(svm_model, svm_model_file)
 
-time_start = time.time() # Vediamo qquanto tempo impiegano i modelli
+time_start = time.time() # Vediamo quanto tempo impiegano i modelli
 
 if chosen_option == 'Logistic Regression':
     lr()
