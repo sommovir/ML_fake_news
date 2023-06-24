@@ -174,7 +174,8 @@ print("----------\n")
 
 trainer.train()
 
-trainer.evaluate()
+metrics = trainer.evaluate()
+print(metrics)
 
 # Salviamo il modello
 models_path = "../MODELS" # Path per salvare i modelli
