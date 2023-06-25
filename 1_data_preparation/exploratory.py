@@ -14,7 +14,6 @@ nlp = spacy.load('en_core_web_sm')
 # Load processed dataset
 dataset = pd.read_pickle("../DATA/processed_training.pkl.zip")
 
-'''
 # ----------------------------------
 # Distibuzione della classificazione
 # ----------------------------------
@@ -129,8 +128,6 @@ plot_ngrams(reliable_set, "Top 20 reliable news trigrams", 'img/reliable_trigram
 # Plot trigrams for the unreliable set
 print("Plotting trigrams for unreliable set...")
 plot_ngrams(unreliable_set, "Top 20 unreliable news trigrams", 'img/unreliable_trigrams.png', 'Trigram', n=3)
-
-'''
 
 # -----------------
 # Analisi dei topic 
