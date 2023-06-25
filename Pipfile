@@ -23,6 +23,7 @@ spacy = "*"
 inquirer = "*"
 torch = {version = "==2.0.1+cpu", index = "downloadpytorch"}
 accelerate = "*"
+bleach = "*"
 
 [dev-packages]
 

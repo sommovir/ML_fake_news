@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Result</title>
+
+        <link rel="stylesheet" type="text/css" href="/static/assets/css/bulma.min.css">
+    </head>
+    <body>
+        <section class="section">
+            <div class="container">
+                <div class="card is-5-desktop">
+                    <header class="card-header">
+                        <p class="card-header-title">Prediction Result</p>
+                    </header>
+                    <div class="card-content">
+                        <div class="notification is-{% if prediction == 1 %}danger{% else %}success{% endif %}">
+                            <h2 class="subtitle">This article is {% if prediction == 0 %}Reliable{% else %}Unreliable{% endif %}</h2>
+                        </div>
+                        <a class="button is-primary" href="{{ url_for('home') }}">Back</a>
+                    </div>
+                    <footer class="card-footer">
+                        <p>Generated in {{ time }} seconds.</p>
+                        <p>Prediction class: {{prediction}}</p>
+                    </footer>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            
+        </section>
+    </body>
+</html>

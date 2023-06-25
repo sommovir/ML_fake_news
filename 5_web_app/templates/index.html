@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>Fake News Classifier</title>
+
+        <link rel="stylesheet" type="text/css" href="/static/assets/css/bulma.min.css">
+    </head>
+    <body>
+        <section class="section">
+            <div class="container">
+                <div class="card is-5-desktop">
+                    <header class="card-header">
+                        <p class="card-header-title">Fake News Detection</p>
+                    </header>
+                    <div class="card-content">
+                        <form method="POST" action="{{ url_for('predict') }}">
+                            <div class="field">
+                            <label class="label">Title</label>
+                            <div class="control">
+                                <input class="input" type="text" name="title" placeholder="Enter the title">
+                            </div>
+                            </div>
+                            <div class="field">
+                            <label class="label">Author</label>
+                            <div class="control">
+                                <input class="input" type="text" name="author" placeholder="Enter the author">
+                            </div>
+                            </div>
+                            <div class="field">
+                            <label class="label">Body</label>
+                            <div class="control">
+                                <textarea class="textarea" name="body" placeholder="Enter the body"></textarea>
+                            </div>
+                            </div>
+                            <div class="field">
+                            <div class="control">
+                                <button class="button is-primary" type="submit">Predict</button>
+                            </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
