@@ -43,7 +43,7 @@ def get_prediction(text, convert_to_label=False):
 
 def get_clean_prediction(text, convert_to_label=False):
     r = get_prediction(text, convert_to_label)
-    return r.0
+    return r[0]
 
 if __name__ == '__main__':
     print("Starting prediction on the test.csv ...")
