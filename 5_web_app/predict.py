@@ -11,9 +11,9 @@ print("Init model...")
 models_path = "../MODELS" # Path where the models are saved
 max_length = 256 # max lenght for each document sample
 
-# load the tokenizer: DisltilBert
-tokenizer = DistilBertTokenizerFast.from_pretrained(models_path, do_lower_case=True)
-model = DistilBertForSequenceClassification.from_pretrained(models_path, num_labels=2)
+# load the tokenizer: Bert
+tokenizer = BertTokenizerFast.from_pretrained(models_path, do_lower_case=True)
+model = BertForSequenceClassification.from_pretrained(models_path, num_labels=2)
 
 # load the tokenizer: Bert
 #tokenizer = BertTokenizerFast.from_pretrained(models_path, do_lower_case=True)
