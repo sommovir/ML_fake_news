@@ -1,5 +1,6 @@
 *.sav
 *.zip
 *.csv
+*.pyc
 bert_results/
 MODELS/

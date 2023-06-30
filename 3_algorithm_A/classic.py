@@ -111,6 +111,7 @@ def lr():
     show_roc_curve(lr_model, predict, 'LogisticRegression')
     lr_model_file = f'{models_path}/lr_model.sav'
     joblib.dump(lr_model, lr_model_file)
+    return lr_model
 
 def dt():
     print('Running DecisionTreeClassifier')
@@ -122,14 +123,15 @@ def dt():
     show_roc_curve(dectree_model, predict, 'DecisionTreeClassifier')
     dectree_model_file = f'{models_path}/dectree_model.sav'
     joblib.dump(dectree_model, dectree_model_file)
+    return dectree_model
 
 def rf():
     print('Running RandomForestClassifier')
     ranfor_class= RandomForestClassifier(random_state=42)
     
     params={
-        "n_estimators": 3, # Più si aumenta, meglio è
-        "max_depth": 58 # same as decision
+        "n_estimators": range(3), # Più si aumenta, meglio è
+        "max_depth": range(58) # same as decision
     }
 
     ranfor_model = GridSearchCV(
@@ -146,6 +148,7 @@ def rf():
     show_roc_curve(ranfor_model, predict, 'RandomForestClassifier')
     ranfor_model_file = f'{models_path}/ranfor_model.sav'
     joblib.dump(ranfor_model, ranfor_model_file)
+    return ranfor_model
 
 def svm():
     print('Running SupportVectorMachinesClassifier')
@@ -157,6 +160,7 @@ def svm():
     show_roc_curve(svm_model, predict, 'SupportVectorMachinesClassifier')
     svm_model_file = f'{models_path}/svm_model.sav'
     joblib.dump(svm_model, svm_model_file)
+    return svm_model
 
 time_start = time.time() # Vediamo quanto tempo impiegano i modelli
 
@@ -169,10 +173,25 @@ elif chosen_option == 'Random Forest':
 elif chosen_option == 'Support Vector Machines (SVM)':
     svm()
 elif chosen_option == 'All (tutti in sequenza)':
-    lr()
-    dt()
-    rf()
-    svm()
+    lr_model = lr()
+    dectree_model = dt()
+    ranfor_model = rf()
+    svm_model = svm()
+    models = pd.DataFrame({
+        "Models": [
+            "Logistic Regression",
+            "DecisionTreeClassifier",
+            "RandomForestClassifier",
+            "SVM"],
+        "Scores":[
+            lr_model.score(X_test,y_test),
+            dectree_model.score(X_test,y_test),
+            ranfor_model.score(X_test,y_test),
+            svm_model.score(X_test,y_test)]
+    })
+
+    models = models.sort_values(by="Scores" , ascending=False)
+    models.to_html('img/models.html')
 
 time_end = time.time()
 exec_time = time_end - time_start
