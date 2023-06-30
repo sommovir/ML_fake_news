@@ -41,6 +41,10 @@ def get_prediction(text, convert_to_label=False):
     
     return d[int(probs.argmax())] if convert_to_label else int(probs.argmax()), exec_time
 
+def get_clean_prediction(text, convert_to_label=False):
+    r = get_prediction(text, convert_to_label)
+    return r.0
+
 if __name__ == '__main__':
     print("Starting prediction on the test.csv ...")
     time_start = time.time() # Vediamo quanto tempo impiega a predire il test dataset
@@ -52,7 +56,7 @@ if __name__ == '__main__':
     # add a new column that contains the author, title and article content
     new_df["new_text"] = new_df["author"].astype(str) + " : " + new_df["title"].astype(str) + " - " + new_df["text"].astype(str)
     # get the prediction of all the test set
-    new_df["label"] = new_df["new_text"].apply(get_prediction)
+    new_df["label"] = new_df["new_text"].apply(get_clean_prediction)
     # make the submission file
     final_df = new_df[["id", "label"]]
     final_df.to_csv("../DATA/submit_final.csv", index=False)
