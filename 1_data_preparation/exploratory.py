@@ -1,15 +1,19 @@
 import pandas as pd
 import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.stem.porter import PorterStemmer
+from nltk.corpus import stopwords
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori, association_rules
 import spacy
-from spacy import displacy
 import seaborn as sns
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
-import sys
+import re
 
 # Load spacy NLP model
 # Shell: python -m spacy download en_core_web_sm 
-nlp = spacy.load('en_core_web_sm')
+#nlp = spacy.load('en_core_web_sm')
 
 # Load processed dataset
 dataset = pd.read_pickle("../DATA/processed_training.pkl.zip")
@@ -192,8 +196,6 @@ plt.axis('off')
 plt.savefig('img/topics_word_cloud_unreliable_post.png', bbox_inches='tight')
 plt.clf()
 
-
-
 # ------------------
 # Sentiment analysis
 # ------------------
@@ -214,6 +216,11 @@ mean_sentiment_per_category = dataset.groupby('label')['sentiment'].mean()
 fig, ax = plt.subplots()
 mean_sentiment_per_category.plot(kind='bar', ax=ax)
 
+# Centrato sullo zero
+#y_min, y_max = ax.get_ylim()
+#abs_max = max(abs(y_min), abs(y_max))
+#ax.set_ylim(-abs_max, abs_max)
+
 ax.set_xlabel('Categoria')
 ax.set_ylabel('Sentimento Medio')
 ax.set_xticklabels(['reliable', 'unreliable'], rotation=0)
@@ -232,15 +239,40 @@ plt.clf()
 te = TransactionEncoder() # TransactionEncoder object
 
 # Scegliere se analizziamo i soli titoli o il content = titoli + corpo dell'articolo
+'''
+# Quanto segue serve solo per analizzare i soli titoli
+port_stem = PorterStemmer()
+nltk.download('stopwords')
+stop_words = stopwords.words('english')
+def preprocessing(content):
+    content = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+',' ', content) # remove url
+    content = re.sub('[^\.\w\s]',' ', content)       # remove all that is not a character or punctuation
+    content = re.sub('[^a-zA-Z]',' ', content)       # replace all non-alphabetic with a space
+    content = re.sub('\s\s+',' ', content)           # replace more than one space with a single space
+    content = content.lower()                        # Convert to lower case
+    
+    # Split the words into list
+    content_list = content.split()
+    
+    #generate a list of stemmed words, excluding stop words
+    stemmed_content = [
+        port_stem.stem(word)
+        for word in content_list
+        if word not in stop_words
+    ]
+    # Join elements in a single string space-separated
+    stemmed_content = " ".join(stemmed_content)
+    return stemmed_content
 dataset['title_prep'] = dataset.title.apply(preprocessing)
+'''
 # se usiamo il content il preprocessing è già stato fatto
 
 # Analisi reliable
 df_class_0 = dataset[dataset['label'] == 0]
 
 # Scegliere se analizziamo i soli titoli o il content = titoli + corpo dell' articolo
-te_ary_0 = te.fit_transform(df_class_0['title_prep'].apply(lambda x: x.split()))
-# te_ary_0 = te.fit_transform(df_class_0['content'].apply(lambda x: x.split()))
+#te_ary_0 = te.fit_transform(df_class_0['title_prep'].apply(lambda x: x.split())) # Solo titoli
+te_ary_0 = te.fit_transform(df_class_0['content'].apply(lambda x: x.split())) # Titoli e corpo
 
 df_transformed_0 = pd.DataFrame(te_ary_0, columns=te.columns_)
 frequent_itemsets_class_0 = apriori(df_transformed_0, min_support=0.1, use_colnames=True)
@@ -250,8 +282,8 @@ rules_class_0 = association_rules(frequent_itemsets_class_0, metric="confidence"
 df_class_1 = dataset[dataset['label'] == 1]
 
 # Scegliere se analizziamo i soli titoli o il content = titoli + corpo dell' articolo
-te_ary_1 = te.fit_transform(df_class_1['title_prep'].apply(lambda x: x.split()))
-# te_ary_1 = te.fit_transform(df_class_1['content'].apply(lambda x: x.split()))
+#te_ary_1 = te.fit_transform(df_class_1['title_prep'].apply(lambda x: x.split())) # Solo titoli
+te_ary_1 = te.fit_transform(df_class_1['content'].apply(lambda x: x.split())) # Titoli e corpo
 
 df_transformed_1 = pd.DataFrame(te_ary_1, columns=te.columns_)
 frequent_itemsets_class_1 = apriori(df_transformed_1, min_support=0.1, use_colnames=True)
@@ -264,7 +296,7 @@ plt.yticks(range(len(frequent_itemsets_class_0)), frequent_itemsets_class_0['ite
 plt.xlabel('Support')
 plt.ylabel('Itemsets')
 plt.title('Frequent Itemsets (reliable news)')
-plt.savefig('img/frequent_itemset_reliable.png', bbox_inches='tight')
+plt.savefig('img/associations_frequent_itemset_reliable.png', bbox_inches='tight')
 plt.clf()
 
 # Grafico degli itemset frequenti nelle unreliable news
@@ -274,5 +306,5 @@ plt.yticks(range(len(frequent_itemsets_class_1)), frequent_itemsets_class_1['ite
 plt.xlabel('Support')
 plt.ylabel('Itemsets')
 plt.title('Frequent Itemsets (unreliable news)')
-plt.savefig('img/frequent_itemset_unreliable.png', bbox_inches='tight')
+plt.savefig('img/associations_frequent_itemset_unreliable.png', bbox_inches='tight')
 plt.clf()
