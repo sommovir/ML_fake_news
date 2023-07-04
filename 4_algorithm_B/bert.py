@@ -182,6 +182,15 @@ models_path = "../MODELS" # Path per salvare i modelli
 brt_model.save_pretrained(models_path)
 tokenizer.save_pretrained(models_path)
 
+# Info sul modello
+import os
+import io
+file_path = "../MODELS/.model.txt"
+text = "Distilled" if distilled else "Regular"
+with open(file_path, "w") as file:
+    file.write(text)
+
+# Tempi di esecuzione
 time_end = time.time()
 exec_time = time_end - time_start
 
