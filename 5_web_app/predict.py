@@ -15,21 +15,14 @@ print("Init model...")
 models_path = "../MODELS" # Path where the models are saved
 max_length = 256 # max lenght for each document sample
 
-with open(file_path, "r") as file:
-    content = file.read()
+# load the tokenizer: DisltilBert
+tokenizer = DistilBertTokenizerFast.from_pretrained(models_path, do_lower_case=True)
+model = DistilBertForSequenceClassification.from_pretrained(models_path, num_labels=2)
 
-if content == "Distilled":
-    # load the tokenizer: DisltilBert
-    tokenizer = DistilBertTokenizerFast.from_pretrained(models_path, do_lower_case=True)
-    model = DistilBertForSequenceClassification.from_pretrained(models_path, num_labels=2)
-elif content == "Regular":
-    # load the tokenizer: Bert
-    tokenizer = BertTokenizerFast.from_pretrained(models_path, do_lower_case=True)
-    model = BertForSequenceClassification.from_pretrained(models_path, num_labels=2)
-else:
-    print("Impossibile determinare il tipo di modello da caricare.")
-    sys.exit()
-    
+# load the tokenizer: Bert
+#tokenizer = BertTokenizerFast.from_pretrained(models_path, do_lower_case=True)
+#model = BertForSequenceClassification.from_pretrained(models_path, num_labels=2)
+
 model = model.to(device)
 
 print("Model loaded successfully!")
