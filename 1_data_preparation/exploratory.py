@@ -13,7 +13,7 @@ import re
 
 # Load spacy NLP model
 # Shell: python -m spacy download en_core_web_sm 
-#nlp = spacy.load('en_core_web_sm')
+nlp = spacy.load('en_core_web_sm')
 
 # Load processed dataset
 dataset = pd.read_pickle("../DATA/processed_training.pkl.zip")
