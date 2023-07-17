@@ -2,5 +2,7 @@
 *.zip
 *.csv
 *.pyc
+*.bin
+*.json
+vocab.txt
 bert_results/
-MODELS/
